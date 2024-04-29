@@ -42,9 +42,9 @@ def main(c, k):
     error = losshistory.metrics_test.copy()
 
     for i in range(40):
-        X = geomtime.random_points(10000)
-        Y = np.abs(model.predict(X, operator=pde))
-        err_eq = np.power(Y, k) / np.power(Y, k).mean() + c
+        X = geomtime.random_points(10000) #生成10000个随机点，存储在变量X中
+        Y = np.abs(model.predict(X, operator=pde)) #使用模型对这些随机点进行预测，结果保存在变量Y中
+        err_eq = np.power(Y, k) / np.power(Y, k).mean() + c #计算误差，具体为残差的k次方除以残差的k次方的均值再加上c
         err_eq_normalized = (err_eq / sum(err_eq))[:, 0]
         X_ids = np.random.choice(a=len(X), size=NumDomain, replace=False, p=err_eq_normalized)
         X_selected = X[X_ids]

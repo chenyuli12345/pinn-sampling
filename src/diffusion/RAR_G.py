@@ -40,15 +40,15 @@ def main():
 
     error = losshistory.metrics_test[-1:]
 
-    for i in range(40):
-        X = geomtime.random_points(10000)
-        Y = np.abs(model.predict(X, operator=pde))[:, 0]
-        err_eq = torch.tensor(Y)
-        X_ids = torch.topk(err_eq, 1, dim=0)[1].numpy()
-        data.add_anchors(X[X_ids])
+    for i in range(40): #迭代40次
+        X = geomtime.random_points(10000) #生成10000个随机点，存储在变量X中
+        Y = np.abs(model.predict(X, operator=pde))[:, 0] #使用模型对这些随机点进行预测，结果保存在变量Y中
+        err_eq = torch.tensor(Y) #将Y转换为张量
+        X_ids = torch.topk(err_eq, 1, dim=0)[1].numpy() #找到张量中最大的一个值的索引，存储在X_ids中
+        data.add_anchors(X[X_ids]) #将这个点添加到锚点中
 
-        losshistory, train_state = model.train(epochs=1000)
-        error.append(losshistory.metrics_test[-1])
+        losshistory, train_state = model.train(epochs=1000) #重新训练模型1000次，并讲训练过程的损失和训练状态保存在losshistory和train_state中
+        error.append(losshistory.metrics_test[-1]) #将最后一次的测试误差添加到error中
 
     dde.saveplot(losshistory, train_state, issave=True, isplot=True)
     np.savetxt(f'error_RAR-G.txt', error)
